@@ -94,7 +94,11 @@ export default function App() {
               <Twemoji text="❓" />
             </button>
             <div className="flex flex-col justify-center items-center grow">
-              <img src={sparkgeoLogo} style={{ height: "25%" }}></img>
+              <img
+                alt="Sparkgeo logo"
+                src={sparkgeoLogo}
+                style={{ height: "25%" }}
+              ></img>
               <h1 className="text-4xl font-bold tracking-wide text-center my-1">
                 sar<span className="text-green-600">dle</span>
               </h1>
