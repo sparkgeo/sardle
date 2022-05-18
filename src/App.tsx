@@ -12,7 +12,7 @@ import { useSettings } from "./hooks/useSettings";
 import { Sardle } from "./components/Sardle";
 import { Stats } from "./components/panels/Stats";
 import { Twemoji } from "@teuteuf/react-emoji-render";
-import { getDayString, useTodays } from "./hooks/useTodays";
+// import { getDayString, useTodays } from "./hooks/useTodays";
 
 import sparkgeoLogo from "./sparkgeo.png"; // with import
 
@@ -23,7 +23,7 @@ import sparkgeoLogo from "./sparkgeo.png"; // with import
 export default function App() {
   const { t, i18n } = useTranslation();
 
-  const dayString = useMemo(getDayString, []);
+  // const dayString = useMemo(getDayString, []);
   // const [{ city }] = useTodays(dayString);
 
   const [infoOpen, setInfoOpen] = useState(false);

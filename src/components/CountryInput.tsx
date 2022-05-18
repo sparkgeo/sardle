@@ -1,7 +1,7 @@
 import { t } from "i18next";
 import React, { useState } from "react";
 import Autosuggest from "react-autosuggest";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { getCityName, sanitizeCityName, cities } from "../domain/cities";
 
 interface CountryInputProps {

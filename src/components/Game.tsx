@@ -41,12 +41,12 @@ export function Game({ settingsData, updateSettings }: GameProps) {
 
   const [todays, addGuess] = useTodays(dayString);
   const { city, guesses } = todays;
-  const cityName = useMemo(
-    // () => (city ? getCountryName(i18n.resolvedLanguage, city) : ""),
-    () => (city ? getCityName(city) : ""),
-    // [city, i18n.resolvedLanguage]
-    [city]
-  );
+  // const cityName = useMemo(
+  //   // () => (city ? getCountryName(i18n.resolvedLanguage, city) : ""),
+  //   () => (city ? getCityName(city) : ""),
+  //   // [city, i18n.resolvedLanguage]
+  //   [city]
+  // );
 
   const [currentGuess, setCurrentGuess] = useState("");
   const [hideImageMode, setHideImageMode] = useMode(
