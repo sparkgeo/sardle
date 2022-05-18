@@ -1,16 +1,10 @@
 import { DateTime } from "luxon";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import seedrandom from "seedrandom";
-import {
-  bigEnoughCountriesWithImage,
-  countriesWithImage,
-  Country,
-  smallCountryLimit,
-} from "../domain/countries";
-import { areas } from "../domain/countries.area";
+import { cities, City } from "../domain/cities";
 import { Guess, loadAllGuesses, saveGuesses } from "../domain/guess";
 
-const forcedCountries: Record<string, string> = {
+const forcedCities: Record<string, string> = {
   "2022-02-02": "TD",
   "2022-02-03": "PY",
   "2022-03-21": "HM",
@@ -29,15 +23,13 @@ export function getDayString(shiftDayCount?: number) {
 
 export function useTodays(dayString: string): [
   {
-    country?: Country;
+    city?: City;
     guesses: Guess[];
   },
-  (guess: Guess) => void,
-  number,
-  number
+  (guess: Guess) => void
 ] {
   const [todays, setTodays] = useState<{
-    country?: Country;
+    city?: City;
     guesses: Guess[];
   }>({ guesses: [] });
 
@@ -49,7 +41,7 @@ export function useTodays(dayString: string): [
 
       const newGuesses = [...todays.guesses, newGuess];
 
-      setTodays((prev) => ({ country: prev.country, guesses: newGuesses }));
+      setTodays((prev) => ({ city: prev.city, guesses: newGuesses }));
       saveGuesses(dayString, newGuesses);
     },
     [dayString, todays]
@@ -57,87 +49,86 @@ export function useTodays(dayString: string): [
 
   useEffect(() => {
     const guesses = loadAllGuesses()[dayString] ?? [];
-    const country = getCountry(dayString);
+    const city = getCity(dayString);
 
-    setTodays({ country, guesses });
+    setTodays({ city, guesses });
   }, [dayString]);
 
-  const randomAngle = useMemo(
-    () => seedrandom.alea(dayString)() * 360,
-    [dayString]
-  );
+  // const randomAngle = useMemo(
+  //   () => seedrandom.alea(dayString)() * 360,
+  //   [dayString]
+  // );
 
-  const imageScale = useMemo(() => {
-    const normalizedAngle = 45 - (randomAngle % 90);
-    const radianAngle = (normalizedAngle * Math.PI) / 180;
-    return 1 / (Math.cos(radianAngle) * Math.sqrt(2));
-  }, [randomAngle]);
+  // const imageScale = useMemo(() => {
+  //   const normalizedAngle = 45 - (randomAngle % 90);
+  //   const radianAngle = (normalizedAngle * Math.PI) / 180;
+  //   return 1 / (Math.cos(radianAngle) * Math.sqrt(2));
+  // }, [randomAngle]);
 
-  return [todays, addGuess, randomAngle, imageScale];
+  return [todays, addGuess];
 }
 
-function getCountry(dayString: string) {
+function getCity(dayString: string) {
   const currentDayDate = DateTime.fromFormat(dayString, "yyyy-MM-dd");
   let pickingDate = DateTime.fromFormat("2022-03-21", "yyyy-MM-dd");
-  let smallCountryCooldown = 0;
-  let pickedCountry: Country | null = null;
+  const smallCountryCooldown = 0;
+  let pickedCity: City | null = null;
 
   const lastPickDates: Record<string, DateTime> = {};
 
   do {
-    smallCountryCooldown--;
+    // smallCountryCooldown--;
 
     const pickingDateString = pickingDate.toFormat("yyyy-MM-dd");
 
-    const forcedCountryCode = forcedCountries[dayString];
-    const forcedCountry =
-      forcedCountryCode != null
-        ? countriesWithImage.find(
-            (country) => country.code === forcedCountryCode
-          )
+    const forcedCityCode = forcedCities[dayString];
+    const forcedCity =
+      forcedCityCode != null
+        ? cities.find((city) => city.properties.iso_a2 === forcedCityCode)
         : undefined;
 
-    const countrySelection =
-      smallCountryCooldown < 0
-        ? countriesWithImage
-        : bigEnoughCountriesWithImage;
+    // const countrySelection =
+    //   smallCountryCooldown < 0
+    //     ? countriesWithImage
+    //     : bigEnoughCountriesWithImage;
 
-    if (forcedCountry != null) {
-      pickedCountry = forcedCountry;
+    const citySelection = cities;
+
+    if (forcedCity != null) {
+      pickedCity = forcedCity;
     } else {
-      let countryIndex = Math.floor(
-        seedrandom.alea(pickingDateString)() * countrySelection.length
+      let cityIndex = Math.floor(
+        seedrandom.alea(pickingDateString)() * citySelection.length
       );
-      pickedCountry = countrySelection[countryIndex];
+      pickedCity = citySelection[cityIndex];
 
       if (currentDayDate >= noRepeatStartDate) {
-        while (isARepeat(pickedCountry, lastPickDates, currentDayDate)) {
-          countryIndex = (countryIndex + 1) % countrySelection.length;
-          pickedCountry = countrySelection[countryIndex];
+        while (isARepeat(pickedCity, lastPickDates, currentDayDate)) {
+          cityIndex = (cityIndex + 1) % citySelection.length;
+          pickedCity = citySelection[cityIndex];
         }
       }
     }
 
-    if (areas[pickedCountry.code] < smallCountryLimit) {
-      smallCountryCooldown = 7;
-    }
-
-    lastPickDates[pickedCountry.code] = pickingDate;
+    lastPickDates[pickedCity.properties.iso_a2] = pickingDate;
     pickingDate = pickingDate.plus({ day: 1 });
   } while (pickingDate <= currentDayDate);
 
-  return pickedCountry;
+  return pickedCity;
 }
 
 function isARepeat(
-  pickedCountry: Country | null,
+  pickedCity: City | null,
   lastPickDates: Record<string, DateTime>,
   currentDayDate: DateTime
 ) {
-  if (pickedCountry == null || lastPickDates[pickedCountry.code] == null) {
+  if (
+    pickedCity == null ||
+    lastPickDates[pickedCity.properties.iso_a2] == null
+  ) {
     return false;
   }
-  const daysSinceLastPick = lastPickDates[pickedCountry.code].diff(
+  const daysSinceLastPick = lastPickDates[pickedCity.properties.iso_a2].diff(
     currentDayDate,
     "day"
   ).days;
