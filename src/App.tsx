@@ -9,7 +9,7 @@ import { InfosHu } from "./components/panels/InfosHu";
 import { InfosNl } from "./components/panels/InfosNl";
 import { Settings } from "./components/panels/Settings";
 import { useSettings } from "./hooks/useSettings";
-import { Sardle } from "./components/Sardle";
+import { Urble } from "./components/Urble";
 import { Stats } from "./components/panels/Stats";
 import { Twemoji } from "@teuteuf/react-emoji-render";
 // import { getDayString, useTodays } from "./hooks/useTodays";
@@ -100,7 +100,7 @@ export default function App() {
                 style={{ height: "25%" }}
               ></img>
               <h1 className="text-4xl font-bold tracking-wide text-center my-1">
-                ?<span className="text-green-600">dle</span>
+                urb<span className="text-green-600">le</span>
               </h1>
             </div>
 
@@ -125,7 +125,7 @@ export default function App() {
               text="❤️"
               className="flex items-center justify-center mr-1"
             />{" "}
-            <Sardle />? -
+            <Urble />? -
             <a
               className="underline pl-1"
               href="https://www.ko-fi.com/teuteuf"

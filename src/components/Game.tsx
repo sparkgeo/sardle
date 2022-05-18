@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { toast } from "react-toastify";
 import { getCityName, sanitizeCityName } from "../domain/cities";
-import { CountryInput } from "./CountryInput";
+import { CityInput } from "./CityInput";
 import * as geolib from "geolib";
 import { Share } from "./Share";
 import { Guesses } from "./Guesses";
@@ -37,12 +37,12 @@ export function Game({ settingsData, updateSettings }: GameProps) {
 
   useNewsNotifications(dayString);
 
-  const countryInputRef = useRef<HTMLInputElement>(null);
+  const cityInputRef = useRef<HTMLInputElement>(null);
 
   const [todays, addGuess] = useTodays(dayString);
   const { city, guesses } = todays;
   // const cityName = useMemo(
-  //   // () => (city ? getCountryName(i18n.resolvedLanguage, city) : ""),
+  //   // () => (city ? getcityName(i18n.resolvedLanguage, city) : ""),
   //   () => (city ? getCityName(city) : ""),
   //   // [city, i18n.resolvedLanguage]
   //   [city]
@@ -76,7 +76,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
       );
 
       if (guessedCity == null) {
-        toast.error(t("unknownCountry"));
+        toast.error(t("unknownCity"));
         return;
       }
 
@@ -140,7 +140,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
           onClick={() => setHideImageMode(false)}
         >
           <Twemoji
-            text={t("showCountry")}
+            text={t("showCity")}
             options={{ className: "inline-block" }}
           />
         </button>
@@ -209,7 +209,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
         rowCount={MAX_TRY_COUNT}
         guesses={guesses}
         settingsData={settingsData}
-        countryInputRef={countryInputRef}
+        cityInputRef={cityInputRef}
       />
       <div className="my-2">
         {gameEnded && city?.properties.name ? (
@@ -252,8 +252,8 @@ export function Game({ settingsData, updateSettings }: GameProps) {
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col">
-              <CountryInput
-                inputRef={countryInputRef}
+              <CityInput
+                inputRef={cityInputRef}
                 currentGuess={currentGuess}
                 setCurrentGuess={setCurrentGuess}
               />
