@@ -4,9 +4,7 @@ import { Feature, Point } from "geojson";
 
 interface CityProps {
   name: string;
-  country: string;
   iso_a2: string;
-  type: string;
   population: number;
 }
 

@@ -84,7 +84,7 @@ function getCity(dayString: string) {
     const forcedCityCode = forcedCities[dayString];
     const forcedCity =
       forcedCityCode != null
-        ? cities.find((city) => city.properties.iso_a2 === forcedCityCode)
+        ? cities.find((city) => city.properties.name === forcedCityCode)
         : undefined;
 
     // const countrySelection =
@@ -110,7 +110,7 @@ function getCity(dayString: string) {
       }
     }
 
-    lastPickDates[pickedCity.properties.iso_a2] = pickingDate;
+    lastPickDates[pickedCity.properties.name] = pickingDate;
     pickingDate = pickingDate.plus({ day: 1 });
   } while (pickingDate <= currentDayDate);
 
@@ -122,13 +122,10 @@ function isARepeat(
   lastPickDates: Record<string, DateTime>,
   currentDayDate: DateTime
 ) {
-  if (
-    pickedCity == null ||
-    lastPickDates[pickedCity.properties.iso_a2] == null
-  ) {
+  if (pickedCity == null || lastPickDates[pickedCity.properties.name] == null) {
     return false;
   }
-  const daysSinceLastPick = lastPickDates[pickedCity.properties.iso_a2].diff(
+  const daysSinceLastPick = lastPickDates[pickedCity.properties.name].diff(
     currentDayDate,
     "day"
   ).days;
