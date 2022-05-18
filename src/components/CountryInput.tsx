@@ -1,9 +1,8 @@
 import { t } from "i18next";
 import React, { useState } from "react";
 import Autosuggest from "react-autosuggest";
-import { useTranslation } from "react-i18next";
-import { getCountryName, sanitizeCountryName } from "../domain/countries";
-import { countries } from "../domain/countries.position";
+// import { useTranslation } from "react-i18next";
+import { getCityName, sanitizeCityName, cities } from "../domain/cities";
 
 interface CountryInputProps {
   inputRef: React.RefObject<HTMLInputElement>;
@@ -18,7 +17,7 @@ export function CountryInput({
 }: CountryInputProps) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const { i18n } = useTranslation();
+  // const { i18n } = useTranslation();
 
   return (
     <Autosuggest
@@ -28,12 +27,10 @@ export function CountryInput({
       suggestions={suggestions}
       onSuggestionsFetchRequested={({ value }) =>
         setSuggestions(
-          countries
-            .map((c) => getCountryName(i18n.resolvedLanguage, c).toUpperCase())
-            .filter((countryName) =>
-              sanitizeCountryName(countryName).includes(
-                sanitizeCountryName(value)
-              )
+          cities
+            .map((c) => getCityName(c).toUpperCase())
+            .filter((cityName) =>
+              sanitizeCityName(cityName).includes(sanitizeCityName(value))
             )
             .sort()
         )

@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { toast } from "react-toastify";
-import { getCountryName, sanitizeCountryName } from "../domain/countries";
+import { getCityName, sanitizeCityName } from "../domain/cities";
 import { CountryInput } from "./CountryInput";
 import * as geolib from "geolib";
 import { Share } from "./Share";
@@ -17,7 +17,8 @@ import { SettingsData } from "../hooks/useSettings";
 import { useMode } from "../hooks/useMode";
 import { getDayString, useTodays } from "../hooks/useTodays";
 import { Twemoji } from "@teuteuf/react-emoji-render";
-import { countries } from "../domain/countries.position";
+// import { countries } from "../domain/countries.position";
+import { cities } from "../domain/cities";
 import { useNewsNotifications } from "../hooks/useNewsNotifications";
 
 const MAX_TRY_COUNT = 6;
@@ -38,12 +39,14 @@ export function Game({ settingsData, updateSettings }: GameProps) {
 
   const countryInputRef = useRef<HTMLInputElement>(null);
 
-  const [todays, addGuess, randomAngle, imageScale] = useTodays(dayString);
-  const { country, guesses } = todays;
-  const countryName = useMemo(
-    () => (country ? getCountryName(i18n.resolvedLanguage, country) : ""),
-    [country, i18n.resolvedLanguage]
-  );
+  const [todays, addGuess] = useTodays(dayString);
+  const { city, guesses } = todays;
+  // const cityName = useMemo(
+  //   // () => (city ? getCountryName(i18n.resolvedLanguage, city) : ""),
+  //   () => (city ? getCityName(city) : ""),
+  //   // [city, i18n.resolvedLanguage]
+  //   [city]
+  // );
 
   const [currentGuess, setCurrentGuess] = useState("");
   const [hideImageMode, setHideImageMode] = useMode(
@@ -63,28 +66,34 @@ export function Game({ settingsData, updateSettings }: GameProps) {
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
-      if (country == null) {
+      if (city == null) {
         return;
       }
       e.preventDefault();
-      const guessedCountry = countries.find(
-        (country) =>
-          sanitizeCountryName(
-            getCountryName(i18n.resolvedLanguage, country)
-          ) === sanitizeCountryName(currentGuess)
+      const guessedCity = cities.find(
+        (city) =>
+          sanitizeCityName(getCityName(city)) === sanitizeCityName(currentGuess)
       );
 
-      if (guessedCountry == null) {
+      if (guessedCity == null) {
         toast.error(t("unknownCountry"));
         return;
       }
 
+      const guessedCityCoords = {
+        longitude: guessedCity.geometry.coordinates[0],
+        latitude: guessedCity.geometry.coordinates[1],
+      };
+      const cityCoords = {
+        longitude: city.geometry.coordinates[0],
+        latitude: city.geometry.coordinates[1],
+      };
       const newGuess = {
         name: currentGuess,
-        distance: geolib.getDistance(guessedCountry, country),
+        distance: geolib.getDistance(guessedCityCoords, cityCoords),
         direction: geolib.getCompassDirection(
-          guessedCountry,
-          country,
+          guessedCityCoords,
+          cityCoords,
           (origin, dest) =>
             Math.round(geolib.getRhumbLineBearing(origin, dest) / 45) * 45
         ),
@@ -97,24 +106,22 @@ export function Game({ settingsData, updateSettings }: GameProps) {
         toast.success(t("welldone"), { delay: 2000 });
       }
     },
-    [addGuess, country, currentGuess, i18n.resolvedLanguage, t]
+    // [addGuess, city, currentGuess, i18n.resolvedLanguage, t]
+    [addGuess, city, currentGuess, t]
   );
 
   useEffect(() => {
     let toastId: ReactText;
-    const { country, guesses } = todays;
+    const { city, guesses } = todays;
     if (
-      country &&
+      city &&
       guesses.length === MAX_TRY_COUNT &&
       guesses[guesses.length - 1].distance > 0
     ) {
-      toastId = toast.info(
-        getCountryName(i18n.resolvedLanguage, country).toUpperCase(),
-        {
-          autoClose: false,
-          delay: 2000,
-        }
-      );
+      toastId = toast.info(getCityName(city).toUpperCase(), {
+        autoClose: false,
+        delay: 2000,
+      });
     }
 
     return () => {
@@ -151,7 +158,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
             <Twemoji text="↪️" className="text-xl" />
           </button>
         )}
-        <img
+        {/* <img
           className={`pointer-events-none max-h-52 m-auto transition-transform duration-700 ease-in dark:invert ${
             hideImageMode && !gameEnded ? "h-0" : "h-full"
           }`}
@@ -164,7 +171,15 @@ export function Game({ settingsData, updateSettings }: GameProps) {
                 }
               : {}
           }
-        />
+        /> */}
+        <div className="flex flex-col">
+          <div className="flex my-1">
+            <p>Our visualizations will go here</p>
+          </div>
+          <div className="flex my-1">
+            <p>City: {city?.properties.name}</p>
+          </div>
+        </div>
         {settingsData.allowShiftingDay && settingsData.shiftDayCount < 7 && (
           <button
             type="button"
@@ -197,7 +212,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
         countryInputRef={countryInputRef}
       />
       <div className="my-2">
-        {gameEnded && country ? (
+        {gameEnded && city?.properties.name ? (
           <>
             <Share
               guesses={guesses}
@@ -206,7 +221,8 @@ export function Game({ settingsData, updateSettings }: GameProps) {
               hideImageMode={hideImageMode}
               rotationMode={rotationMode}
             />
-            <div className="flex flex-wrap gap-4 justify-center">
+            {/* TODO: Google maps link and wikipedia link. Or something else */}
+            {/* <div className="flex flex-wrap gap-4 justify-center">
               <a
                 className="underline text-center block mt-4 whitespace-nowrap"
                 href={`https://www.google.com/maps?q=${countryName}+${country.code.toUpperCase()}&hl=${
@@ -231,7 +247,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
                   options={{ className: "inline-block" }}
                 />
               </a>
-            </div>
+            </div> */}
           </>
         ) : (
           <form onSubmit={handleSubmit}>
