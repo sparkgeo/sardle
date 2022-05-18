@@ -4,17 +4,17 @@ import Autosuggest from "react-autosuggest";
 // import { useTranslation } from "react-i18next";
 import { getCityName, sanitizeCityName, cities } from "../domain/cities";
 
-interface CountryInputProps {
+interface CityInputProps {
   inputRef: React.RefObject<HTMLInputElement>;
   currentGuess: string;
   setCurrentGuess: (guess: string) => void;
 }
 
-export function CountryInput({
+export function CityInput({
   inputRef,
   currentGuess,
   setCurrentGuess,
-}: CountryInputProps) {
+}: CityInputProps) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   // const { i18n } = useTranslation();

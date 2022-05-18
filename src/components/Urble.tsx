@@ -1,9 +1,9 @@
 import React from "react";
 
-export function Sardle() {
+export function Urble() {
   return (
     <span className="font-bold">
-      SAR<span className="text-green-600">DLE</span>
+      urb<span className="text-green-600">le</span>
     </span>
   );
 }
