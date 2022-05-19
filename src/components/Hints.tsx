@@ -1,4 +1,5 @@
 import React from "react";
+import { HintRow } from "./HintRow";
 import { Guess } from "../domain/guess";
 
 interface HintsProps {
@@ -18,12 +19,13 @@ export function Hints({ guesses }: HintsProps) {
   const numberOfGuesses = guesses.length;
 
   const hintQuestions = questions.map((question, idx) => {
-    return (
-      <div key={idx} className="pb-3">
-        {question}
-      </div>
-    );
+    return <HintRow key={idx}>{question}</HintRow>;
   });
 
-  return <>{hintQuestions.slice(0, numberOfGuesses)}</>;
+  return (
+    <>
+      {hintQuestions[0]}
+      {hintQuestions.slice(1, numberOfGuesses + 1)}
+    </>
+  );
 }
