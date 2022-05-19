@@ -29,6 +29,11 @@ interface GameProps {
   updateSettings: (newSettings: Partial<SettingsData>) => void;
 }
 
+export function computePercentDifference(a: number, b: number): number {
+  const percent = Math.floor((Math.max(a - b, 0) / a) * 100);
+  return percent;
+}
+
 export function Game({ settingsData, updateSettings }: GameProps) {
   const { t, i18n } = useTranslation();
   const dayString = useMemo(
@@ -92,6 +97,12 @@ export function Game({ settingsData, updateSettings }: GameProps) {
       const newGuess = {
         name: currentGuess,
         distance: geolib.getDistance(guessedCityCoords, cityCoords),
+        populationDifference:
+          guessedCity.properties.population - city.properties.population,
+        populationPercentDifference: computePercentDifference(
+          guessedCity.properties.population,
+          city.properties.population
+        ),
         direction: geolib.getCompassDirection(
           guessedCityCoords,
           cityCoords,
@@ -174,12 +185,9 @@ export function Game({ settingsData, updateSettings }: GameProps) {
           }
         /> */}
         <div className="flex flex-col">
-          <div className="flex my-1">
-            <p>Our visualizations will go here</p>
-          </div>
-          <div className="flex my-1">
+          {/* <div className="flex my-1">
             <p>City: {city?.properties.name}</p>
-          </div>
+          </div> */}
         </div>
         {settingsData.allowShiftingDay && settingsData.shiftDayCount < 7 && (
           <button
@@ -194,7 +202,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
           </button>
         )}
       </div>
-      {!gameEnded && <Hints guesses={guesses} />}
+      {!gameEnded && city && <Hints guesses={guesses} city={city} />}
       {rotationMode && !hideImageMode && !gameEnded && (
         <button
           className="font-bold rounded p-1 border-2 uppercase mb-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"

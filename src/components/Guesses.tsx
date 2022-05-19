@@ -10,6 +10,15 @@ interface GuessesProps {
   cityInputRef?: React.RefObject<HTMLInputElement>;
 }
 
+const questionTypeMapping: string[] = [
+  "population", // q1
+  "distance",
+  "distance",
+  "distance",
+  "distance",
+  "distance",
+];
+
 export function Guesses({
   rowCount,
   guesses,
@@ -25,6 +34,7 @@ export function Guesses({
             guess={guesses[index]}
             settingsData={settingsData}
             cityInputRef={cityInputRef}
+            questionType={questionTypeMapping[index]}
           />
         ))}
       </div>

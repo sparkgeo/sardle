@@ -3,6 +3,8 @@ import { Direction } from "./geography";
 export interface Guess {
   name: string;
   distance: number;
+  populationDifference: number;
+  populationPercentDifference: number;
   direction: Direction;
 }
 

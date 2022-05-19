@@ -17,12 +17,47 @@ interface GuessRowProps {
   guess?: Guess;
   settingsData: SettingsData;
   cityInputRef?: React.RefObject<HTMLInputElement>;
+  questionType: string;
 }
 
-export function GuessRow({ guess, settingsData, cityInputRef }: GuessRowProps) {
+export function GuessRow({
+  guess,
+  settingsData,
+  cityInputRef,
+  questionType,
+}: GuessRowProps) {
   const { distanceUnit, theme } = settingsData;
-  const proximity = guess != null ? computeProximityPercent(guess.distance) : 0;
-  const squares = generateSquareCharacters(proximity, theme);
+
+  let proximityPercent;
+  let difference;
+  let unit;
+  let arrowEmoji;
+  console.log(questionType);
+  if (questionType === "distance") {
+    proximityPercent =
+      guess != null ? computeProximityPercent(guess.distance) : 0;
+    unit = distanceUnit;
+    difference =
+      guess != null
+        ? formatDistance(guess.distance, unit)
+        : formatDistance(0, unit);
+    arrowEmoji =
+      guess != null ? <Twemoji text={getDirectionEmoji(guess)} /> : undefined;
+  } else {
+    proximityPercent = guess != null ? guess.populationPercentDifference : 0;
+    unit = "people";
+    difference =
+      guess != null ? `${guess.populationDifference} people` : "0 people";
+    if (guess != null && guess.populationDifference < 0) {
+      arrowEmoji = <Twemoji text="🔼" />;
+    } else if (guess != null && guess.populationDifference > 0) {
+      arrowEmoji = <Twemoji text="🔽" />;
+    } else {
+      arrowEmoji = <Twemoji text="✅" />;
+    }
+  }
+
+  const squares = generateSquareCharacters(proximityPercent, theme);
 
   const [animationState, setAnimationState] =
     useState<AnimationState>("NOT_STARTED");
@@ -78,7 +113,7 @@ export function GuessRow({ guess, settingsData, cityInputRef }: GuessRowProps) {
           </div>
           <div className="flex items-center justify-center border-2 h-8 col-span-1 animate-reveal rounded">
             <CountUp
-              end={proximity}
+              end={proximityPercent}
               suffix="%"
               duration={(SQUARE_ANIMATION_LENGTH * 5) / 1000}
             />
@@ -94,13 +129,13 @@ export function GuessRow({ guess, settingsData, cityInputRef }: GuessRowProps) {
             </p>
           </div>
           <div className="flex items-center justify-center border-2 h-8 col-span-2 animate-reveal rounded">
-            {guess && formatDistance(guess.distance, distanceUnit)}
+            {guess && difference}
           </div>
           <div className="flex items-center justify-center border-2 h-8 col-span-1 animate-reveal rounded">
-            {guess && <Twemoji text={getDirectionEmoji(guess)} />}
+            {guess && arrowEmoji}
           </div>
           <div className="flex items-center justify-center border-2 h-8 col-span-1 animate-reveal animate-pop rounded">
-            {`${proximity}%`}
+            {`${proximityPercent}%`}
           </div>
         </>
       );

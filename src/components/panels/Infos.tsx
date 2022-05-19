@@ -35,6 +35,8 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
                 name: "Chile",
                 direction: "NE",
                 distance: 13_557_000,
+                populationDifference: 100000,
+                populationPercentDifference: 50,
               },
             ]}
             settingsData={settingsData}
@@ -55,6 +57,8 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
                 name: "Finland",
                 direction: "SE",
                 distance: 3_206_000,
+                populationDifference: 100000,
+                populationPercentDifference: 50,
               },
             ]}
             settingsData={settingsData}
@@ -74,6 +78,8 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
                 name: "Lebanon",
                 direction: "N",
                 distance: 0,
+                populationDifference: 100000,
+                populationPercentDifference: 50,
               },
             ]}
             settingsData={settingsData}
