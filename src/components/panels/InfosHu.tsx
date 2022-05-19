@@ -39,6 +39,8 @@ export function InfosHu({ isOpen, close, settingsData }: InfosProps) {
                 name: "Chile",
                 direction: "NE",
                 distance: 13_557_000,
+                populationDifference: 100000,
+                populationPercentDifference: 50,
               },
             ]}
             settingsData={settingsData}
@@ -58,6 +60,8 @@ export function InfosHu({ isOpen, close, settingsData }: InfosProps) {
                 name: "Finnország",
                 direction: "SE",
                 distance: 3_206_000,
+                populationDifference: 100000,
+                populationPercentDifference: 50,
               },
             ]}
             settingsData={settingsData}
@@ -78,6 +82,8 @@ export function InfosHu({ isOpen, close, settingsData }: InfosProps) {
                 name: "Libanon",
                 direction: "N",
                 distance: 0,
+                populationDifference: 100000,
+                populationPercentDifference: 50,
               },
             ]}
             settingsData={settingsData}
