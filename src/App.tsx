@@ -125,8 +125,8 @@ export default function App() {
               text="❤️"
               className="flex items-center justify-center mr-1"
             />{" "}
-            <Urble />? -
-            <a
+            <Urble />?
+            {/* <a
               className="underline pl-1"
               href="https://www.ko-fi.com/teuteuf"
               target="_blank"
@@ -138,7 +138,7 @@ export default function App() {
                   options={{ className: "inline-block" }}
                 />
               </div>
-            </a>
+            </a> */}
           </footer>
         </div>
       </div>

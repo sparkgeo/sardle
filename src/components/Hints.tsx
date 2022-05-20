@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import { HintRow } from "./HintRow";
 import { Population } from "./Population";
 import { OsmStreets } from "./OsmStreets";
+import { Weather } from "./Weather";
 import { Guess } from "../domain/guess";
 import { City } from "../domain/cities";
 import axios from "axios";
+
+const getStaticMapboxUrl = (coordinates: number[], zoomLevel: number) => {
+  return `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${coordinates[0]},${coordinates[1]},${zoomLevel},0/500x400?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`;
+};
 
 const getOsmStreetsImage = async (
   longitude: number,
@@ -39,7 +44,7 @@ export function Hints({ guesses, city }: HintsProps) {
   const [isOsmError, setIsOsmError] = useState<boolean>(false);
 
   useEffect(() => {
-    // Fetching the image here allows us to load in before we need to display it
+    // Fetching the image here allows us to load it before we need to display it
     const fetchImage = async () => {
       try {
         setImage(
@@ -49,7 +54,6 @@ export function Hints({ guesses, city }: HintsProps) {
           )
         );
       } catch (e) {
-        console.log("set is error");
         setIsOsmError(true);
       }
     };
@@ -59,15 +63,33 @@ export function Hints({ guesses, city }: HintsProps) {
 
   const questions = [
     <Population key="q1" population={city.properties.population} />,
+    // OSM streets
     isOsmError ? (
       <h1>Error loading OSM streets image</h1>
     ) : (
       <OsmStreets key="q2" image={image} />
     ),
-    "question 3",
-    "question 4",
-    "question 5",
-    "question 6",
+    // Weather
+    <Weather key="q3" cityName={city.properties.name} />,
+    // Satellite
+    <>
+      <h1>Mapbox Satellite</h1>
+      <img
+        key="q4"
+        src={getStaticMapboxUrl(city.geometry.coordinates, 12)}
+        alt="1st satellite"
+      />
+    </>,
+    <img
+      key="q5"
+      src={getStaticMapboxUrl(city.geometry.coordinates, 9)}
+      alt="1st satellite"
+    />,
+    <img
+      key="q6"
+      src={getStaticMapboxUrl(city.geometry.coordinates, 6)}
+      alt="1st satellite"
+    />,
   ];
 
   const hintQuestions = questions.map((question, idx) => {
