@@ -21,7 +21,7 @@ import sparkgeoLogo from "./sparkgeo.png"; // with import
 // };
 
 export default function App() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   // const dayString = useMemo(getDayString, []);
   // const [{ city }] = useTodays(dayString);
