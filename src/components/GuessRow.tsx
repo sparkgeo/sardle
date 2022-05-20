@@ -32,7 +32,6 @@ export function GuessRow({
   let difference;
   let unit;
   let arrowEmoji;
-  console.log(questionType);
   if (questionType === "distance") {
     proximityPercent =
       guess != null ? computeProximityPercent(guess.distance) : 0;
@@ -49,9 +48,9 @@ export function GuessRow({
     difference =
       guess != null ? `${guess.populationDifference} people` : "0 people";
     if (guess != null && guess.populationDifference < 0) {
-      arrowEmoji = <Twemoji text="🔼" />;
-    } else if (guess != null && guess.populationDifference > 0) {
       arrowEmoji = <Twemoji text="🔽" />;
+    } else if (guess != null && guess.populationDifference > 0) {
+      arrowEmoji = <Twemoji text="🔼" />;
     } else {
       arrowEmoji = <Twemoji text="✅" />;
     }
@@ -135,7 +134,12 @@ export function GuessRow({
             {guess && arrowEmoji}
           </div>
           <div className="flex items-center justify-center border-2 h-8 col-span-1 animate-reveal animate-pop rounded">
-            {`${proximityPercent}%`}
+            {/* {`${proximityPercent}%`} */}
+            {guess &&
+            guess.populationDifference &&
+            guess.populationDifference < 0
+              ? `-${proximityPercent}%`
+              : `${proximityPercent}%`}
           </div>
         </>
       );

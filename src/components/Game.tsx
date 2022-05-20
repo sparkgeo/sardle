@@ -30,10 +30,8 @@ interface GameProps {
 }
 
 export function computePercentDifference(a: number, b: number): number {
-  const percent = Math.floor((Math.max(a - b, 0) / a) * 100);
-  return percent;
+  return Math.round(100 * Math.abs((a - b) / ((a + b) / 2)));
 }
-
 export function Game({ settingsData, updateSettings }: GameProps) {
   const { t, i18n } = useTranslation();
   const dayString = useMemo(
