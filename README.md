@@ -1,24 +1,22 @@
-# WOR**L**DLE
+# Urb**le**
 
-Play this geographical wordle here: https://Urble.teuteuf.fr !
+We forked [wordle](https://github.com/teuteuf/worldle) then made it harder and less coherent.
 
-## Contributions & PR
+This is a May 2022 hackathon project by Team Defiant. The code is far from perfect and should not be used as an example of best practices.
 
-Even if there are many more users than I could ever imagine on Urble, it was originally a small pet project that I started in order to  practice code and have fun.
+## Data
+- Cities - Natural Earth
+- Streets - OpenStreetMap
+- Weather - weatherdbi
+- Satellite imagery - Mapbox
 
-So, I prefer to continue to manage it personally and do all the design and the code by myself.  :)
-
-Therefore, I'm not looking for contributors or PR! I could accept PR for specific things, for instance to add support for your native language or to fix something, but please, don't hesitate to contact me first!
-
-If you'd like to make a suggestion, don't hesitate to open an issue!
-
-Otherwise, feel free to fork the project, customize it and play with it on your side! <3
-
-## Resources used:
-
-- Countries with long/lat => https://developers.google.com/public-data/docs/canonical/countries_csv
-- Country area => https://github.com/samayo/country-json/blob/master/src/country-by-surface-area.json
-- French country names => https://fr.wikipedia.org/wiki/ISO_3166
-- Country images => https://github.com/djaiss/mapsicon
-- Fixed images => http://www.amcharts.com/svg-maps/ & Wikipedia
-- Emojis & World icon => https://github.com/twitter/twemoji
+## Getting started
+1. Start an instance of [this API](https://github.com/sparkgeo/defiant-hack-may-2022/tree/main/street_api) locally (follow the steps in the repo).
+2. `git clone git@github.com:sparkgeo/urble.git`
+3. `cd urble`
+4. Create a `.env.local` file and add your mapbox token:
+  ```
+  REACT_APP_MAPBOX_TOKEN=<your token>
+  ``` 
+5. `npm i`
+6. `npm start`
